@@ -61,18 +61,11 @@ Route::middleware('auth')->group(function () {
 
   //Route::get('test', [StudentController::class, 'staticCompleteStudentStatus'])->name('test');
 
-  Route::get('pdf/pdf', [StudentController::class,'pdfAssistGeneral'])->name('pdfAssistGeneral');
+  Route::get('pdf/pdf', [PdfController::class,'pdfAssistGeneral'])->name('pdfAssistGeneral');
 
-
-  Route::get('pdf/pdfpromocion', [StudentController::class, 'pdfAssistProm'])->name('pdfAssistProm');
-
-
-  Route::get('pdf/pdfregular', [StudentController::class, 'pdfAssistReg'])->name('pdfAssistReg');
-
-
-  Route::get('pdf/pdflibre', [StudentController::class, 'pdfAssistAud'])->name('pdfAssistAud');
-
-
+  Route::Get('informes', function () {
+    return view('informes.index');
+  })->name('informes');
 });
 
 require __DIR__.'/auth.php';

@@ -1,19 +1,6 @@
 @extends('layouts.app')
 @section('content')
 <div class="container mt-2">
-  <form action="{{route('pdfAssistGeneral')}}" method="GET">
-    @csrf
-    <select name="selectedYear" id="selectedYear">
-      <option selected hidden>Selecciona Año</option>
-      <option value="Todos">Todos</option>
-      <option value="Primero">Primero</option>
-      <option value="Segundo">Segundo</option>
-      <option value="Tercero">Tercero</option>
-      <option value="Cuarto">Cuarto</option>
-      <option value="Quinto">Quinto</option>
-    </select>
-    <input type="submit" value="Generar Informe de asistencias" class="btn btn-primary">
-  </form>
 </div>
 <div class="row justify-content-center mt-3">
   <div class="col-md-12">
