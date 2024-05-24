@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Mockery\Undefined;
 
 class StudentController extends Controller
 {
@@ -141,10 +142,10 @@ class StudentController extends Controller
       ->where('dni_student', '=', $request->dni_student)
       ->get();
     $year = DB::table('years')
-    ->select('*')
-    ->join('students', 'years.id', '=','students.year_id')
-    ->where('students.dni_student', '=', $request->dni_student)
-    ->get();
+      ->select('*')
+      ->join('students', 'years.id', '=', 'students.year_id')
+      ->where('students.dni_student', '=', $request->dni_student)
+      ->get();
     return view('students.sign', [
       'student' => $student,
       'year' => $year[0]->year
@@ -156,7 +157,8 @@ class StudentController extends Controller
     //get assists
     $getAllAssists = DB::table('assists')
       ->join('students', 'assists.student_id', '=', 'students.id')
-      ->select(DB::raw('count(*) as assist_count,students.id,students.name,students.last_name,students.dni_student'))
+      ->join('years', 'students.year_id', '=', 'years.id')
+      ->select(DB::raw('count(*) as assist_count,students.id,students.name,students.last_name,students.dni_student,years.year,students.group_student'))
       ->groupBy('students.id')
       ->get();
 
@@ -187,10 +189,56 @@ class StudentController extends Controller
     return $completeStudent;
   }
 
-  public function pdfAssistGeneral()
+  public function pdfAssistGeneral(Request $request)
   {
     $students = $this->staticCompleteStudentStatus();
-    $pdf = pdf::loadView('pdf.pdf', compact('students'));
+    $og = $students;
+    $students = [];
+    $multiple = null;
+    switch ($request->selectedYear) {
+      case 'Primero':
+        foreach ($og as $eachStudent) {
+          if ($eachStudent["year"] == "Primero") {
+            array_push($students, $eachStudent);
+          }
+        }
+        break;
+      case 'Segundo':
+        foreach ($og as $eachStudent) {
+          if ($eachStudent["year"] == "Segundo") {
+            array_push($students, $eachStudent);
+          }
+        }
+        break;
+      case 'Tercero':
+        foreach ($og as $eachStudent) {
+          if ($eachStudent["year"] == "Tercero") {
+            array_push($students, $eachStudent);
+          }
+        }
+        break;
+      case 'Cuarto':
+        foreach ($og as $eachStudent) {
+          if ($eachStudent["year"] == "Cuarto") {
+            array_push($students, $eachStudent);
+          }
+        }
+        break;
+      case 'Quinto':
+        foreach ($og as $eachStudent) {
+          if ($eachStudent["year"] == "Quinto") {
+            array_push($students, $eachStudent);
+          }
+        }
+        break;
+      case 'Todos':
+        $students = $og;
+        $multiple = true;
+        break;
+      default:
+        break;
+    }
+    $pdf = pdf::loadView('pdf.pdf', compact('students','multiple'));
     return $pdf->stream();
   }
 
