@@ -1,14 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Param;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
 
-class PdfController extends Controller
+class ExcelController extends Controller
 {
   public static function staticCompleteStudentStatus()
   {
@@ -18,8 +15,8 @@ class PdfController extends Controller
       ->join('years', 'students.year_id', '=', 'years.id')
       ->select(DB::raw('count(*) as assist_count,students.id,students.name,students.last_name,students.dni_student,years.year,students.group_student,years.id'))
       ->groupBy('students.id')
-      ->orderBy('years.id','asc')
-      ->orderBy('students.group_student','asc')
+      ->orderBy('years.id', 'asc')
+      ->orderBy('students.group_student', 'asc')
       ->get();
 
     $params = Param::all();
@@ -33,7 +30,7 @@ class PdfController extends Controller
       $status = 'undefined';
       if ($assistCount > 0) {
         if ($calculate >= $params[0]->promote) {
-          $status = "Promoción";
+          $status = "Promocion";
         } elseif (($calculate < $params[0]->promote) && ($calculate >= $params[0]->regular)) {
           $status = "Regular";
         } elseif (($calculate < $params[0]->regular)) {
@@ -108,12 +105,63 @@ class PdfController extends Controller
     $array = ["multiple" => $multiple, "students" => $students];
     return $array;
   }
-  public function pdfAssistGeneral($request)
+  public function excelAssistGeneral($request)
   {
     $returnedValue = $this->getYearToPdf($request);
     $students = $returnedValue["students"];
     $multiple = $returnedValue["multiple"];
-    $pdf = pdf::loadView('pdf.pdf', compact('students', 'multiple'));
-    return $pdf->stream();
+
+ 
+    $output = "";
+
+    $output .= "
+			<table  border=1 cellpadding=1 cellspacing=1>
+				<thead>
+					<tr>
+						<th style='background-color: #069; color: white; width: 100px;'>DNI</th>
+						<th style='background-color: #069; color: white; width: 200px;'>Nombre</th>
+						<th style='background-color: #069; color: white; width: 100px;'>Apellido</th>
+						<th style='background-color: #069; color: white; width: 100px;'>Grupo</th>
+            <th style='background-color: #069; color: white; width: 100px;'>Grado</th>  
+            <th style='background-color: #069; color: white; width: 100px;'>Cantidad de Asistencias</th>
+            <th style='background-color: #069; color: white; width: 100px;'>Condicion</th>
+					</tr>
+				<tbody>
+		";
+    if(empty($students)){
+      $msg = "No hay estudiantes de este grado con asistencias";
+      $output .= "<tr> 
+        <td colspan=7 style='font-size: 20px; color: red;'>". $msg ."</td>
+      </tr>";
+
+    }else{
+      foreach ($students as $eachStudent) {
+
+        $output .= "
+					<tr>
+			<td>" . $eachStudent['dni_student'] . "</td>
+      <td>" . $eachStudent['name'] . "</td>
+      <td>" . $eachStudent['last_name'] . "</td>
+      <td>" . $eachStudent['group_student'] . "</td>
+      <td>" . $eachStudent['year'] . "</td>
+      <td>" . $eachStudent['assist_count'] . "</td>
+      <td>" . $eachStudent['status'] . "</td>
+					</tr>
+		";
+      }
+    }
+    
+    $output .= "
+				</tbody>
+				
+			</table>
+		";
+    echo $output;
+    header("Content-Type: charset=utf-8; application/xls");
+    header("Content-Disposition: attachment; filename=planilla_de_asistencias_" . date('Y/m/d') . ".xls");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+
   }
 }
+?>

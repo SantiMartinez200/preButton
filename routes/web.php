@@ -7,6 +7,7 @@ use App\Http\Controllers\ParamController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudentStatusController;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\ExcelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,26 +33,20 @@ Route::middleware('auth')->group(function () {
   Route::get('/dashboard', [DashboardController::class, 'compactData'])->name('/dashboard');
 
   Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-
   Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
   Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
   Route::resource('students', StudentController::class);
-
   Route::get('assist/{id}', [StudentController::class, 'find'])->name("StudentAssist");
 
   Route::get('params.controlPanel', [ParamController::class,'getParams'])->name('panel');
   Route::get('params.editControlPanel/{id}', [ParamController::class, 'edit'])->name('edit');
-
   Route::put('param-update/{id}', [ParamController::class, 'updateParam'])->name("param-update");
 
   Route::get('/sign', function () {
     return view('students.sign');
   })->name('signView');
-  
   Route::POST('findThis', [StudentController::class,'findThis'])->name('findThis');
-
   Route::GET('storeFromButton/{id}', [AssistController::class, 'storeFromButton'])->name('storeFromButton');
 
   Route::get('/libres', [StudentStatusController::class,'compactAuditors'])->name('libres');
@@ -61,11 +56,14 @@ Route::middleware('auth')->group(function () {
 
   //Route::get('test', [StudentController::class, 'staticCompleteStudentStatus'])->name('test');
 
-  Route::get('pdf/pdf', [PdfController::class,'pdfAssistGeneral'])->name('pdfAssistGeneral');
-
   Route::Get('informes', function () {
     return view('informes.index');
   })->name('informes');
+  Route::get('routeFormat')->middleware('routeFormat')->name('routeFormat');
+  Route::get('pdf/pdf{request}', [PdfController::class,'pdfAssistGeneral'])->name('pdfAssistGeneral');
+  Route::get('excel/excel{request}', [ExcelController::class, 'excelAssistGeneral'])->name('excelAssistGeneral');
+
+
 });
 
 require __DIR__.'/auth.php';
