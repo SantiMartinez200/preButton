@@ -55,49 +55,49 @@ class PdfController extends Controller
     $students = [];
     $multiple = null;
     switch ($request) {
-      case 'Primero':
+      case '1':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Primero") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Segundo':
+      case '2':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Segundo") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Tercero':
+      case '3':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Tercero") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Cuarto':
+      case '4':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Cuarto") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Quinto':
+      case '5':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Quinto") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Sexto':
+      case '6':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Sexto") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Todos':
+      case '0':
         $students = $og;
         $multiple = true;
         break;

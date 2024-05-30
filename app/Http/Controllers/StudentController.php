@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\Param;
+use App\Models\Year;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Mockery\Undefined;
@@ -29,7 +31,8 @@ class StudentController extends Controller
    */
   public function create(): View
   {
-    return view('students.create');
+    $years = Year::all();
+    return view('students.create', compact('years'));
   }
 
   /**
@@ -39,7 +42,6 @@ class StudentController extends Controller
   {
     $val = $request->birthday;
     $onlyYear = date('Y', strtotime($val));
-    //$thisYear = Carbon::now()->format('Y');
     $thisYear = date('Y');
     if (($thisYear - $onlyYear) < 17) {
       return redirect()->route('students.create')
@@ -90,8 +92,12 @@ class StudentController extends Controller
    */
   public function edit(Student $student): View
   {
+    $studentYear = $student->year;
+    $years = Year::all();
     return view('students.edit', [
-      'student' => $student
+      'student' => $student,
+      'studentYear' => $studentYear,
+      'years' => $years
     ]);
   }
 
@@ -141,14 +147,66 @@ class StudentController extends Controller
       ->select('*')
       ->where('dni_student', '=', $request->dni_student)
       ->get();
-    $year = DB::table('years')
+    $yearStudent = DB::table('years')
       ->select('*')
       ->join('students', 'years.id', '=', 'students.year_id')
       ->where('students.dni_student', '=', $request->dni_student)
       ->get();
+    $years = Year::all();
     return view('students.sign', [
       'student' => $student,
-      'year' => $year[0]->year
+      'yearStudent' => $yearStudent,
+      'years' => $years,
+      'requestDni' => $request->dni_student
     ]);
+  }
+
+  public function getStudentsPerYear(request $request){
+    $sas = Year::find($request);
+    $years = Year::all();
+    $students = Student::all();
+    $getStudentsWithYear = [];
+    foreach ($students as $eachStudent) {
+      if ($eachStudent->year_id == $request->selectedYear) {
+        $addYear = Year::find($sas[0]->id)->year;
+        array_push($getStudentsWithYear, [$eachStudent,$addYear]);
+      }
+    }
+
+    $todayDate = Carbon::now()->toDateString();
+    ;
+    $todayDate = $todayDate . "%";
+    $condition = false;
+
+    $getStudentsPerYear = [];
+
+    foreach ($getStudentsWithYear as $eachStudent) {
+      $studentDate = DB::table('assists')
+        ->select()
+        ->where('student_id', '=', $eachStudent[0]["id"])
+        ->where('created_at', 'LIKE', $todayDate)
+        ->get();
+      if ($studentDate->IsEmpty()) {
+        $condition = true; //Cargar asistencia.
+        array_push($eachStudent, $condition);
+        array_push($getStudentsPerYear, $eachStudent);
+      } else {
+        $condition = false; //No cargar la asistencia
+        array_push($eachStudent, $condition);
+        array_push($getStudentsPerYear, $eachStudent);
+      }
+    }
+
+    return view('students.sign', [
+      'students' => $getStudentsPerYear,
+      'years' => $years,
+      'sas' => $sas
+    ]);
+   
+  }
+
+  public static function validateButton($id)
+  {
+   
   }
 }

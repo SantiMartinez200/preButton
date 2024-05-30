@@ -52,49 +52,49 @@ class ExcelController extends Controller
     $students = [];
     $multiple = null;
     switch ($request) {
-      case 'Primero':
+      case '1':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Primero") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Segundo':
+      case '2':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Segundo") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Tercero':
+      case '3':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Tercero") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Cuarto':
+      case '4':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Cuarto") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Quinto':
+      case '5':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Quinto") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Sexto':
+      case '6':
         foreach ($og as $eachStudent) {
           if ($eachStudent["year"] == "Sexto") {
             array_push($students, $eachStudent);
           }
         }
         break;
-      case 'Todos':
+      case '0':
         $students = $og;
         $multiple = true;
         break;
@@ -121,7 +121,6 @@ class ExcelController extends Controller
 						<th style='background-color: #069; color: white; width: 100px;'>DNI</th>
 						<th style='background-color: #069; color: white; width: 200px;'>Nombre</th>
 						<th style='background-color: #069; color: white; width: 100px;'>Apellido</th>
-						<th style='background-color: #069; color: white; width: 100px;'>Grupo</th>
             <th style='background-color: #069; color: white; width: 100px;'>Grado</th>  
             <th style='background-color: #069; color: white; width: 100px;'>Cantidad de Asistencias</th>
             <th style='background-color: #069; color: white; width: 100px;'>Condicion</th>
@@ -131,7 +130,7 @@ class ExcelController extends Controller
     if(empty($students)){
       $msg = "No hay estudiantes de este grado con asistencias";
       $output .= "<tr> 
-        <td colspan=7 style='font-size: 20px; color: red;'>". $msg ."</td>
+        <td colspan=7 style='font-size: 20px; color: red; '>". $msg ."</td>
       </tr>";
 
     }else{
@@ -142,7 +141,6 @@ class ExcelController extends Controller
 			<td>" . $eachStudent['dni_student'] . "</td>
       <td>" . $eachStudent['name'] . "</td>
       <td>" . $eachStudent['last_name'] . "</td>
-      <td>" . $eachStudent['group_student'] . "</td>
       <td>" . $eachStudent['year'] . "</td>
       <td>" . $eachStudent['assist_count'] . "</td>
       <td>" . $eachStudent['status'] . "</td>

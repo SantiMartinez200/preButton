@@ -14,8 +14,9 @@ class ParamController extends Controller
 {
   public function getParams()
   {
+    $years = $this->getYears();
     $params = Param::all();
-    return view('params.controlPanel',compact('params'));
+    return view('params.controlPanel',compact('params','years'));
   }
 
   public function edit($id){
@@ -42,5 +43,10 @@ class ParamController extends Controller
       return redirect()->back()
         ->withSuccess('Se actualizó la configuración correctamente.');
     }
+  }
+
+  public static function getYears(){
+    $years = DB::table('years')->select('*')->get();
+    return $years;
   }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudentStatusController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ExcelController;
+use App\Http\Controllers\YearController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,12 +44,12 @@ Route::middleware('auth')->group(function () {
   Route::get('params.editControlPanel/{id}', [ParamController::class, 'edit'])->name('edit');
   Route::put('param-update/{id}', [ParamController::class, 'updateParam'])->name("param-update");
 
-  Route::get('/sign', function () {
-    return view('students.sign');
-  })->name('signView');
+  Route::get('/sign', [YearController::class,'returnToSign'])->name('signView');
   Route::POST('findThis', [StudentController::class,'findThis'])->name('findThis');
+  Route::POST('getStudentsPerYear', [StudentController::class, 'getStudentsPerYear'])->name('getStudentsPerYear');
   Route::GET('storeFromButton/{id}', [AssistController::class, 'storeFromButton'])->name('storeFromButton');
-
+  
+  
   Route::get('/libres', [StudentStatusController::class,'compactAuditors'])->name('libres');
   Route::get('/aprobados', [StudentStatusController::class, 'compactPromoted'])->name('aprobados');
   Route::get('/regulares', [StudentStatusController::class, 'compactRegularized'])->name('regulares');
@@ -56,9 +57,7 @@ Route::middleware('auth')->group(function () {
 
   //Route::get('test', [StudentController::class, 'staticCompleteStudentStatus'])->name('test');
 
-  Route::Get('informes', function () {
-    return view('informes.index');
-  })->name('informes');
+  Route::Get('informes', [YearController::class,'returnToReports'])->name('informes');
   Route::get('routeFormat')->middleware('routeFormat')->name('routeFormat');
   Route::get('pdf/pdf{request}', [PdfController::class,'pdfAssistGeneral'])->name('pdfAssistGeneral');
   Route::get('excel/excel{request}', [ExcelController::class, 'excelAssistGeneral'])->name('excelAssistGeneral');

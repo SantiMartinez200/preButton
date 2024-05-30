@@ -3,6 +3,11 @@
 <div class="row justify-content-center mt-3">
   <div class="col-md-8">
     <div class="container">
+      @if ($message = Session::get('status'))
+      <div class="alert alert-danger" role="alert">
+      {{ $message }}
+      </div>
+    @endif
       <div class="card">
         <div class="card-header">
           <div class="float-start">
@@ -21,14 +26,10 @@
                 <div class="col-sm d-flex align-items-center">
                   <div class="m-2">
                     <select name="selectedYear" id="selectedYear" class="w-100 rounded">
-                      <option selected hidden>Opciones</option>
-                      <option value="Todos">Todos</option>
-                      <option value="Primero">Primero</option>
-                      <option value="Segundo">Segundo</option>
-                      <option value="Tercero">Tercero</option>
-                      <option value="Cuarto">Cuarto</option>
-                      <option value="Quinto">Quinto</option>
-                      <option value="Sexto">Sexto</option>
+                      <option value="Opciones" selected hidden>Opciones</option>
+                     @for ($i = 0; $i < count($years); $i++)
+                        <option value="{{ $years[$i]->id }}">{{ $years[$i]->year }}</option>
+                     @endfor
                     </select>
                   </div>
                   <div class="m-2">
@@ -41,9 +42,9 @@
                   </div>
                 </div>
               </div>
-                <div class="col-sm ml-2">
-                  <input type="submit" value="Generar" class="btn btn-primary">
-                </div>
+              <div class="col-sm ml-2">
+                <input type="submit" value="Generar" class="btn btn-primary">
+              </div>
             </form>
           </div>
         </div>

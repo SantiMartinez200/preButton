@@ -18,17 +18,25 @@ class VerifyFormFormat
    */
   public function handle(Request $request, Closure $next): Response
   {
-   if ($request->formFormat == "pdf") {
-      return redirect()->action(
-        [PdfController::class, 'pdfAssistGeneral'],
-        ['request' => $request->selectedYear]
-      );
-   }elseif($request->formFormat == "excel"){
-     return redirect()->action(
-       [ExcelController::class, 'excelAssistGeneral'],
-       ['request' => $request->selectedYear]
-      );
-   }
+    if (!$request->has('formFormat')) {
+      return redirect()->route('informes')
+        ->with('status', 'No se ha seleccionado un formato de archivo.');
+    } elseif ($request->selectedYear == 'Opciones') {
+      return redirect()->route('informes')
+        ->with('status', 'No se ha seleccionado una opción de año.');
+    } else {
+      if ($request->formFormat == "pdf") {
+        return redirect()->action(
+          [PdfController::class, 'pdfAssistGeneral'],
+          ['request' => $request->selectedYear]
+        );
+      } elseif ($request->formFormat == "excel") {
+        return redirect()->action(
+          [ExcelController::class, 'excelAssistGeneral'],
+          ['request' => $request->selectedYear]
+        );
+      }
+    }
     return $next($request);
   }
 

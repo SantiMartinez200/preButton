@@ -5,12 +5,12 @@
   <div class="col-md-8">
     @if ($message = Session::get('success'))
     <div class="alert alert-success" role="alert">
-    {{ $message }}
+      {{ $message }}
     </div>
   @endif
     @if ($message = Session::get('status'))
     <div class="alert alert-danger" role="alert">
-    {{ $message }}
+      {{ $message }}
     </div>
   @endif
     <div class="container">
@@ -73,6 +73,23 @@
             </div>
 
             <div class="mb-3 row">
+              <label for="year_id" class="col-md-4 col-form-label text-md-end text-start">Año</label>
+              <div class="col-md-6">
+                <select class="form-control @error('year_id') is-invalid @enderror" id="year_id" name="year_id"
+                  value="{{ old('year_id') }}">
+                  <option value="{{$studentYear->id}}" selected>{{ $studentYear->year }}</option>
+                  @for ($i = 1; $i < count($years); $i++)
+            <option value="{{ $years[$i]->id }}">{{ $years[$i]->year }}
+            </option>
+          @endfor
+                </select>
+                @if ($errors->has('year_id'))
+          <span class="text-danger">{{ $errors->first('year_id') }}</span>
+        @endif
+              </div>
+            </div>
+
+            <!-- <div class="mb-3 row">
               <label for="group_student" class="col-md-4 col-form-label text-md-end text-start">Grupo</label>
               <div class="col-md-6">
                 <select class="form-control @error('group_student') is-invalid @enderror" id="group_student"
@@ -85,7 +102,7 @@
           <span class="text-danger">{{ $errors->first('group_student') }}</span>
         @endif
               </div>
-            </div>
+            </div> -->
 
             <div class="mb-3 row">
               <input type="submit" class="col-md-3 offset-md-5 btn btn-primary" value="Actualizar Informacion">

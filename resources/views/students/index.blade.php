@@ -22,7 +22,6 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Apellido</th>
                 <th scope="col">Fecha de Nacimiento</th>
-                <th scope="col">Grupo</th>
                 <th scope="col">Año</th>
                 <th scope="col">Acción</th>
               </tr>
@@ -39,7 +38,6 @@
                 $modified = date('d/m/Y', strtotime($original));
                 echo ($modified);
             ?></td>
-            <td>{{ $student->group_student }}</td>
             <td>{{ $student->year->year }}</td>
             <td>
             <form action="{{ route('students.destroy', $student->id) }}" method="post">

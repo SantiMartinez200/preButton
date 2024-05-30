@@ -10,7 +10,7 @@
         @endif
       <div class="container">
         <div class="card">
-            <div class="card-header"><strong>{{$student->name}} {{$student->last_name}} <h1>DNI: ({{$student->dni_student}}) <h1>ID: ({{$student->id}})</h1></strong></div>
+            <div class="card-header"><strong>{{$student->name}} {{$student->last_name}} <h4>DNI: ({{$student->dni_student}}) <h4>ID: ({{$student->id}})</h4> <p class="text-primary">Cantidad de Asistencias: <?php echo(count($cant)) ?></p></strong></div>
             <div class="card-body">
                 <table class="table table-striped table-bordered">
                     <thead>

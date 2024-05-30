@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
+                    <!-- <div class="mb-3 row">
                         <label for="group_student" class="col-md-4 col-form-label text-md-end text-start">Grupo</label>
                         <div class="col-md-6">
                           <select class="form-control @error('group_student') is-invalid @enderror" id="group_student" name="group_student" value="{{ old('group_student') }}">
@@ -72,17 +72,16 @@
                                 <span class="text-danger">{{ $errors->first('group_student') }}</span>
                             @endif
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="mb-3 row">
                         <label for="year_id" class="col-md-4 col-form-label text-md-end text-start">Año</label>
                         <div class="col-md-6">
                           <select class="form-control @error('year_id') is-invalid @enderror" id="year_id" name="year_id" value="{{ old('year_id') }}">
-                            <option value="1">Primero</option>
-                            <option value="2">Segundo</option>
-                            <option value="3">Tercero</option>
-                            <option value="4">Cuarto</option>
-                            <option value="5">Quinto</option>
+                            @for ($i = 1; $i < count($years); $i++)
+                                <option value="{{ $years[$i]->id }}">{{ $years[$i]->year }}
+                                </option>
+                            @endfor
                           </select>
                             @if ($errors->has('year_id'))
                                 <span class="text-danger">{{ $errors->first('year_id') }}</span>

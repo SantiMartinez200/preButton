@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('last_name');
             $table->date('birthday');
-            $table->string('group_student');
+            $table->string('group_student')->nullable();
             $table->timestamps();
         });
     }

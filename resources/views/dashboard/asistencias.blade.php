@@ -19,7 +19,6 @@
                 <th scope="col">DNI del alumno</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Apellido</th>
-                <th scope="col">Grupo</th>
                 <th scope="col">Año </th>
                 <th scope="col">Registrada el</th>
               </tr>
@@ -31,7 +30,6 @@
           <td>{{ $row["dni"] }}</td>
           <td>{{ $row["nombre"] }}</td>
           <td>{{ $row["apellido"] }}</td>
-          <td>{{ $row["grupo"] }}</td>
           <td>{{ $row["año"] }}</td>
           <td>{{ $fecha = date('d/m/Y H:i', strtotime($row["registrada"])) }}</td>
         </tr>

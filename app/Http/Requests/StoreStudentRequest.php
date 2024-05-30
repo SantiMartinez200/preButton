@@ -23,11 +23,10 @@ class StoreStudentRequest extends FormRequest
   {
     return [
       'dni_student' => 'required|integer|max:99999999|unique:students,dni_student',
-      'year_id' => 'required|integer|max:5|min:1',
+      'year_id' => 'required|integer|max:6|min:1',
       'name' => 'required|string|min:1|max:36',
       'last_name' => 'required|string|min:1|max:36',
       'birthday' => 'required',
-      'group_student' => 'required|string|max:1'
     ];
   }
 }

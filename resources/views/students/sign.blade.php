@@ -1,8 +1,21 @@
 @extends('layouts.app')
 @section('content')
 <div class="row justify-content-center mt-3">
-  <div class="col-md-8">
+  <div class="col-md-9">
     <div class="container">
+      @if ($message = Session::get('success'))
+      <div class="alert alert-success mt-2" role="alert">
+      {{ $message }}
+      </div>
+    @elseif($message = Session::get('error'))
+      <div class="alert alert-danger mt-2" role="alert">
+      {{$message}}
+      </div>
+    @elseif($message = Session::get('info'))
+      <div class="alert alert-info mt-2" role="alert">
+      {{$message}}
+      </div>
+    @endif
       <div class="card">
         <div class="card-header">
           <div class="float-start">
@@ -18,10 +31,17 @@
               @csrf
               <div class="row align-items-center">
                 <div class="col-sm">
-                  <input type="number" name="dni_student" class="form-control form-control-sm">
+                  @if(isset($requestDni))
+            <input type="number" name="dni_student"
+            class="form-control form-control-sm rounded border border-grey" value="{{$requestDni}}">
+          @else
+        <input type="number" name="dni_student"
+        class="form-control form-control-sm rounded border border-grey">
+      @endif 
+
                   @if ($errors->has('dni_student'))
-          <span class="text-danger">{{ $errors->first('dni_student') }}</span>
-        @endif
+            <span class="text-danger">{{ $errors->first('dni_student') }}</span>
+          @endif
                 </div>
                 <div class="col-sm">
                   <input type="submit" value="Buscar" class="form-control btn btn-success m-2">
@@ -34,62 +54,125 @@
         </div>
       </div>
       @if ($message = Session::get('status'))
-    <div class="alert alert-success mt-2" role="alert">
+      <div class="alert alert-success mt-2" role="alert">
       {{ $message }}
-    </div>
-  @endif
+      </div>
+    @endif
       <div class="container">
         @if (isset($student))
       @if(($student->isEmpty()) != true)
-    <table class="table table-striped table-bordered">
-    <thead>
+      <table class="table table-striped table-bordered">
+      <thead>
       <tr>
-      <th scope="col"><strong>ID</strong></th>
-      <th scope="col"><strong>Nombre</strong></th>
-      <th scope="col"><strong>Apellido</strong></th>
-      <th scope="col"><strong>Año</strong></th>
-      <th scope="col"><strong>Grupo</strong></th>
-      <th scope="col"><strong>Acción</strong></th>
+        <th scope="col"><strong>ID</strong></th>
+        <th scope="col"><strong>Nombre</strong></th>
+        <th scope="col"><strong>Apellido</strong></th>
+        <th scope="col"><strong>Año</strong></th>
+        <th scope="col"><strong>Grupo</strong></th>
+        <th scope="col"><strong>Acción</strong></th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       <td>{{$student[0]->id}}</td>
       <td>{{$student[0]->name}}</td>
       <td>{{$student[0]->last_name}}</td>
-      <td>{{$year}}</td>
+      <td>{{$year[0]->year}}</td>
       <td>{{$student[0]->group_student}}</td>
       <td>
-      <a href="{{route("storeFromButton", $student[0]->id)}}" class="btn btn-success btn-sm m-1"><i
-      class="bi bi-pencil-square">Asistir!</i></a>
-      <a href="{{route("StudentAssist", $student[0]->id)}}" class="btn btn-primary btn-sm m-1"><i
-      class="bi bi-eye">Ver
-      Asistencias!</i></a>
+        <a href="{{route("storeFromButton", $student[0]->id)}}" class="btn btn-success btn-sm m-1"><i
+        class="bi bi-pencil-square">Asistir!</i></a>
+        <a href="{{route("StudentAssist", $student[0]->id)}}" class="btn btn-primary btn-sm m-1"><i
+        class="bi bi-eye">Ver
+        Asistencias!</i></a>
       </td>
 
-    </tbody>
-    </table>
-  @else
-  <div class="alert alert-danger mt-2" role="alert">
-  No se ha encontrado el estudiante
-  </div>
-@endif
+      </tbody>
+      </table>
+    @else
+      <div class="alert alert-danger mt-2" role="alert">
+      No se ha encontrado el estudiante
+      </div>
+    @endif
     @endif
       </div>
-      @if ($message = Session::get('success'))
-    <div class="alert alert-success mt-2" role="alert">
-      {{ $message }}
     </div>
-  @elseif($message = Session::get('error'))
-  <div class="alert alert-danger mt-2" role="alert">
-    {{$message}}
-  </div>
-  @elseif($message = Session::get('info'))
-  <div class="alert alert-info mt-2" role="alert">
-    {{$message}}
-  </div>
-@endif
-    </div>
-
   </div>
 </div>
+
+<div class="row justify-content-center mt-3">
+  <div class="col-md-9">
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <div class="float-start">
+            <strong>O busca por año en la barra desplegable debajo</strong>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="container">
+            <form action="{{route('getStudentsPerYear')}}" method="POST">
+              @csrf
+              <div class="row align-items-center">
+                <div class="col-sm">
+                  <select name="selectedYear" class="form-control">                    
+                    @if(isset($years))
+                       @if(isset($sas))
+                        <option value="{{ $sas[0]->year_id }}">{{ $sas[0]->year }}</option>
+                       @endif
+                       @for ($i = 1; $i < count($years); $i++)
+                          <option value="{{ $years[$i]->id }}">{{ $years[$i]->year }}</option>
+                       @endfor
+                    @endif
+                  </select>
+                 </div>
+            <div class="col-sm">
+              <input type="submit" value="Filtrar" class="form-control btn btn-success m-2">
+            </div>
+            <div class="col"></div>
+            <div class="col"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!--///////////////////////////////////////////////////////////////////////////////-->
+    @if(isset($sas))
+    <div class="card mt-3">
+      <div class="card-header"><strong>Listado de estudiantes de {{$sas[0]->year}} </strong></div>
+      <div class="card-body">
+      <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+          <th scope="col">DNI</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Año</th>
+          <th scope="col">Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        @forelse ($students as $student)
+      <tr>
+        <th scope="row">{{ $student->dni_student }}</th>
+        <td>{{ $student->name }}</td>
+        <td>{{ $student->last_name }}</td>
+        <td>{{ $student->year }}</td>
+        <td>
+        <a href="{{route("validateButton", $student->id)}}" class="btn btn-success btn-sm m-1"><i
+        class="bi bi-pencil-square">Asistir!</i></>
+        <a href="{{route("StudentAssist", $student->id)}}" class="btn btn-primary btn-sm m-1"><i
+          class="bi bi-eye">Ver Asistencias!</i></a>
+        </td>
+
+      </tr>
+    @empty
+    <td colspan="6">
+      <span class="text-danger">
+      <strong>No hay estudiantes registrados!</strong>
+      </span>
+    </td>
+  @endforelse
+        </tbody>
+      </table>
+  @endif
 @endsection

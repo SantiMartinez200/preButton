@@ -81,7 +81,6 @@ if (!empty($students)) {
           <th>DNI</th>
           <th>Nombre</th>
           <th>Apellido</th>
-          <th>Grupo</th>
           @if(isset($multiple))
       <th>Año</th>
     @endif
@@ -95,7 +94,6 @@ if (!empty($students)) {
       <td data-column="dni">{{ $student["dni_student"] }}</td>
       <td data-column="Nombre"> {{ $student["name"] }}</td>
       <td data-column="Apellido">{{ $student["last_name"] }}</td>
-      <td data-column="Grupo">{{ $student["group_student"] }}</td>
       @if(isset($multiple))
     <td data-column="Año">{{ $student["year"] }}</td>
   @endif
