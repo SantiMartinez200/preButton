@@ -53,10 +53,8 @@
           </div>
         </div>
       </div>
-      @if ($message = Session::get('status'))
-      <div class="alert alert-success mt-2" role="alert">
-      {{ $message }}
-      </div>
+      @if ($message = Session::get('info'))
+      
     @endif
       <div class="container">
         @if (isset($student))
@@ -110,69 +108,78 @@
         </div>
         <div class="card-body">
           <div class="container">
-            <form action="{{route('getStudentsPerYear')}}" method="POST">
+            <form action="{{route('getStudentsPerYear')}}" method="GET">
               @csrf
               <div class="row align-items-center">
                 <div class="col-sm">
-                  <select name="selectedYear" class="form-control">                    
+                  <select name="selectedYear" class="form-control">
+                    <option selected value="0">Seleccione un año</option>
                     @if(isset($years))
-                       @if(isset($sas))
-                        <option value="{{ $sas[0]->year_id }}">{{ $sas[0]->year }}</option>
-                       @endif
-                       @for ($i = 1; $i < count($years); $i++)
-                          <option value="{{ $years[$i]->id }}">{{ $years[$i]->year }}</option>
-                       @endfor
-                    @endif
+              @for ($i = 0; $i < count($years); $i++)
+              <option value="{{ $years[$i]->id }}">{{ $years[$i]->year }}</option>
+               @endfor
+            @endif
                   </select>
-                 </div>
-            <div class="col-sm">
-              <input type="submit" value="Filtrar" class="form-control btn btn-success m-2">
-            </div>
-            <div class="col"></div>
-            <div class="col"></div>
-            </div>
-          </form>
+                </div>
+                <div class="col-sm">
+                  <input type="submit" value="Filtrar" class="form-control btn btn-success m-2">
+                </div>
+                <div class="col"></div>
+                <div class="col"></div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-    <!--///////////////////////////////////////////////////////////////////////////////-->
-    @if(isset($sas))
-    <div class="card mt-3">
-      <div class="card-header"><strong>Listado de estudiantes de {{$sas[0]->year}} </strong></div>
+      <!--///////////////////////////////////////////////////////////////////////////////-->
+      @if($message = Session::get('status'))
+        <div class="alert alert-info mt-2" role="alert">
+         {{$message}}
+       </div>
+      @elseif(isset($selectedYear))
+      <div class="card mt-3">
+      <div class="card-header"><strong>Listado de estudiantes de {{$students[0][0]["year"]["year"]}} </strong></div>
       <div class="card-body">
       <table class="table table-striped table-bordered">
-        <thead>
-        <tr>
-          <th scope="col">DNI</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Apellido</th>
-          <th scope="col">Año</th>
-          <th scope="col">Acción</th>
-        </tr>
-        </thead>
-        <tbody>
-        @forelse ($students as $student)
+      <thead>
       <tr>
-        <th scope="row">{{ $student->dni_student }}</th>
-        <td>{{ $student->name }}</td>
-        <td>{{ $student->last_name }}</td>
-        <td>{{ $student->year }}</td>
-        <td>
-        <a href="{{route("validateButton", $student->id)}}" class="btn btn-success btn-sm m-1"><i
-        class="bi bi-pencil-square">Asistir!</i></>
-        <a href="{{route("StudentAssist", $student->id)}}" class="btn btn-primary btn-sm m-1"><i
-          class="bi bi-eye">Ver Asistencias!</i></a>
-        </td>
+      <th scope="col">DNI</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Apellido</th>
+      <th scope="col">Año</th>
+      <th scope="col">Acción</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      @forelse ($students as $student)
+      <tr>
+
+      <th scope="row">{{ $student[0]["dni_student"] }}</th>
+      <td>{{ $student[0]["name"] }}</td>
+      <td>{{ $student[0]["last_name"] }}</td>
+      <td>{{ $student[0]["year"]["year"] }}</td>
+
+      <td>
+      @if($student[2] == true)
+      <a href="{{route("storeFromButton", $student[0]["id"])}}" class="btn btn-success btn-sm m-1"><i
+      class="bi bi-pencil-square">Asistir!</i>
+      @else
+      <button class="btn btn-success btn-sm m-1" disabled><i class="bi bi-pencil-square">Asistir!</i></button>
+    @endif
+      <a href="{{route("StudentAssist", $student[0]["id"])}}" class="btn btn-primary btn-sm m-1"><i
+      class="bi bi-eye">Ver Asistencias!</i></a>
+      </td>
 
       </tr>
-    @empty
-    <td colspan="6">
+      @empty
+      <td colspan="6">
       <span class="text-danger">
       <strong>No hay estudiantes registrados!</strong>
       </span>
-    </td>
-  @endforelse
-        </tbody>
+      </td>
+    @endforelse
+      </tbody>
       </table>
-  @endif
-@endsection
+      @endif
+          @endsection

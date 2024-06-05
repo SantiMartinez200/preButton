@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
 
   Route::get('/sign', [YearController::class,'returnToSign'])->name('signView');
   Route::POST('findThis', [StudentController::class,'findThis'])->name('findThis');
-  Route::POST('getStudentsPerYear', [StudentController::class, 'getStudentsPerYear'])->name('getStudentsPerYear');
+  Route::GET('getStudentsPerYear', [StudentController::class, 'getStudentsPerYear'])->name('getStudentsPerYear');
   Route::GET('storeFromButton/{id}', [AssistController::class, 'storeFromButton'])->name('storeFromButton');
   
   

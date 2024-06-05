@@ -162,13 +162,17 @@ class StudentController extends Controller
   }
 
   public function getStudentsPerYear(request $request){
-    $sas = Year::find($request);
+    $selectedYear = Year::find($request);
+    if(count($selectedYear)==0){
+      return redirect()->back()
+        ->with('info', 'Por favor seleccione un año');
+    }
     $years = Year::all();
     $students = Student::all();
     $getStudentsWithYear = [];
     foreach ($students as $eachStudent) {
       if ($eachStudent->year_id == $request->selectedYear) {
-        $addYear = Year::find($sas[0]->id)->year;
+        $addYear = Year::find($selectedYear[0]->id)->year;
         array_push($getStudentsWithYear, [$eachStudent,$addYear]);
       }
     }
@@ -200,7 +204,7 @@ class StudentController extends Controller
     return view('students.sign', [
       'students' => $getStudentsPerYear,
       'years' => $years,
-      'sas' => $sas
+      'selectedYear' => $selectedYear
     ]);
    
   }

@@ -18,7 +18,7 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'year_id' => fake()->numberBetween(1,5),
+            'year_id' => fake()->numberBetween(1,1),
             'dni_student' => fake()->randomNumber(8, false),
             'name' => fake()->name(),
             'last_name' => fake()->lastName(),

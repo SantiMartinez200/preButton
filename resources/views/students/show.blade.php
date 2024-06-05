@@ -46,14 +46,6 @@
           </div>
 
           <div class="row">
-            <label for="group_student"
-              class="col-md-4 col-form-label text-md-end text-start"><strong>Grupo:</strong></label>
-            <div class="col-md-6" style="line-height: 35px;">
-              {{ $student->group_student }}
-            </div>
-          </div>
-
-          <div class="row">
             <label for="year"
               class="col-md-4 col-form-label text-md-end text-start"><strong>Año:</strong></label>
             <div class="col-md-6" style="line-height: 35px;">

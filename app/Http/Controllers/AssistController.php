@@ -31,7 +31,7 @@ class AssistController extends Controller
     }
   }
 
-  public function storeFromButton($id)
+  public function storeFromButton($id,$students)
   {
     $bool = $this->ValidateDate($id);
     $params = Param::all();
@@ -41,12 +41,15 @@ class AssistController extends Controller
     if($assists < ($params[0]->total_classes)){
       if ($bool == true) {
         $assist = Assist::create(['student_id' => $id]);
-        return redirect()->route('signView')->withSuccess('Se ha marcado la asistencia del alumno');
+        return view('students.sign',[
+          'message' => 'Se ha marcado la asistencia del alumno'
+
+        ]);
       } else {
-        return redirect()->route('signView')->with('error', 'Este Estudiante ya ha asistido hoy.');
+        return view()->route('signView')->with('error', 'Este Estudiante ya ha asistido hoy.');
       }
     }else{
-      return redirect()->route('signView')->with('info', 'Este Estudiante alcanzó el limite de asistencias.');
+      return view()->route('signView')->with('info', 'Este Estudiante alcanzó el limite de asistencias.');
     }
     
   }
